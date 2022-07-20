@@ -1,0 +1,66 @@
+
+CREATE TABLE public.album (
+	"name" varchar(60) NOT NULL,
+	release_date date NOT NULL,
+	id serial4 NOT NULL,
+	CONSTRAINT album_pk PRIMARY KEY (id),
+	CONSTRAINT album_un UNIQUE (id)
+);
+
+
+CREATE TABLE public.artist (
+	id serial4 NOT NULL,
+	"name" varchar(60) NOT NULL,
+	CONSTRAINT artist_pk PRIMARY KEY (id),
+	CONSTRAINT artist_un UNIQUE (id)
+);
+
+
+CREATE TABLE public.genre (
+	id serial4 NOT NULL,
+	"name" varchar(60) NOT NULL,
+	CONSTRAINT genre_pk PRIMARY KEY (id),
+	CONSTRAINT genre_un UNIQUE (id)
+);
+
+
+CREATE TABLE public.music_set (
+	id int4 NOT NULL DEFAULT nextval('track_set_id_seq'::regclass),
+	"name" varchar(60) NOT NULL,
+	release_year int4 NOT NULL,
+	CONSTRAINT track_set_pk PRIMARY KEY (id)
+);
+
+
+CREATE TABLE public.artist_album (
+	artist_id int4 NOT NULL,
+	album_id int4 NOT NULL,
+	CONSTRAINT artist_album_fk FOREIGN KEY (album_id) REFERENCES public.album(id),
+	CONSTRAINT artist_album_fk_1 FOREIGN KEY (artist_id) REFERENCES public.artist(id)
+);
+
+
+CREATE TABLE public.artist_genre (
+	artist_id int4 NOT NULL,
+	genre_id int4 NOT NULL,
+	CONSTRAINT artist_genre_fk FOREIGN KEY (artist_id) REFERENCES public.artist(id),
+	CONSTRAINT artist_genre_fk_1 FOREIGN KEY (genre_id) REFERENCES public.genre(id)
+);
+
+
+CREATE TABLE public.track (
+	id serial4 NOT NULL,
+	"name" varchar(60) NOT NULL,
+	duration numeric NOT NULL,
+	album_id int4 NOT NULL,
+	CONSTRAINT track_pk PRIMARY KEY (id),
+	CONSTRAINT track_fk FOREIGN KEY (album_id) REFERENCES public.album(id)
+);
+
+
+CREATE TABLE public.track_set (
+	track_id int4 NOT NULL,
+	set_id int4 NOT NULL,
+	CONSTRAINT track_set_fk FOREIGN KEY (track_id) REFERENCES public.track(id),
+	CONSTRAINT track_set_fk_1 FOREIGN KEY (set_id) REFERENCES public.music_set(id)
+);
